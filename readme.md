@@ -1,0 +1,2 @@
+
+This projects helps to the organization who provides nursing service to hospital or invidual person. It can categories its employee in different category like 12 hours service or 24 hours service. Persist the detail of employee , saving the document like vote-card, pan-card, ration card and other. While taking the detail it can take a photo from webcam of employee and crop the image as required and save the image . Also client detail get persisted in database. Print the required document like personal detail ,voter-card ration-card and others.
