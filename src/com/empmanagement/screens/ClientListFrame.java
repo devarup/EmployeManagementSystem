@@ -1,0 +1,388 @@
+package com.empmanagement.screens;
+
+ 
+import com.employeemanagement.models.Client;
+import com.employeemanagement.models.CustomTableModel;
+import com.employeemanagement.models.Employee;
+import com.employeemanagement.utility.StringDocumentFilter;
+import com.empmanagement.persistence.IPersistence;
+import com.empmanagement.persistence.Persistence; 
+import com.empmanagement.providers.EmployeeCategoriesForSearch;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent; 
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector; 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComponent;
+import javax.swing.JInternalFrame; 
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.text.AbstractDocument;
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author arup
+ */
+public class ClientListFrame extends javax.swing.JFrame {
+    
+    private Vector<Vector<String>> data; //used for data from database
+    private Vector<String> header; //used to store data header
+    private Vector<String> vector = null;
+    private IPersistence iPersistence =null; 
+    
+    CustomTableModel empTableModel;
+    
+    /**
+     * Creates new form EmployeeListFrame
+     */
+    
+   
+    
+    
+    public ClientListFrame(String name,MainFrame mainFrame) {
+        
+        super("All Client List");
+        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        this.mainFrame = mainFrame; 
+        
+        iPersistence = Persistence.getInstance(); 
+        List<Client> clientlist = iPersistence.getClients();
+        
+        data = new Vector<Vector<String>>();
+        
+        for(int i = 0; i < clientlist.size(); i++ )
+        {
+            vector = new Vector<String>();
+            
+            System.out.println(" Client Id : "+clientlist.get(i).getClient_id());
+            
+            vector.add(clientlist.get(i).getClient_id());
+            vector.add(clientlist.get(i).getClient_name());
+            vector.add(clientlist.get(i).getClient_mob1());
+            vector.add(clientlist.get(i).getClient_mob2());
+            vector.add(clientlist.get(i).getClient_add());
+                        
+            data.add(vector);
+           // client_List.insertItemAt("hk", i+1);
+        } 
+        
+        createClientListFrame(data);
+         
+    }
+    
+    
+    public void createClientListFrame( Vector<Vector<String>> data){
+         
+        this.data = data;
+        header = new Vector<String>();
+        header.add("Client ID"); 
+        header.add("Client Name"); 
+        header.add("Phone No1"); 
+        header.add("Phone No2"); 
+        header.add("Address");
+        
+        
+        initComponents();  
+        
+        
+        
+        jTable1.setAutoCreateRowSorter(true);
+        jTable1.addMouseListener(new MouseAdapter() {
+            
+            @Override
+            public void mouseClicked(MouseEvent e) 
+            {
+               if (e.getClickCount() == 2) { 
+                   int row =   jTable1.getSelectedRow();
+                   String clientId = (String) jTable1.getValueAt(row,0);
+                   System.out.println("Selected Row : "+row);
+                   System.out.println("Selected Col Id : "+clientId);
+                   
+                   Client client = iPersistence.getClient(clientId);
+                   System.err.println("Client >>>  : "+client.getClient_name());
+                                                        
+                                                         
+                    ClientFrame internalFrame = new ClientFrame("Client Manipulation Panel",mainFrame,ClientListFrame.this,client);                                    
+                    internalFrame.setBounds(170, 30, 105, 70);     
+                    internalFrame.setPreferredSize(new Dimension(600, 400));
+                    internalFrame.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+                    internalFrame.setVisible(true);
+                    internalFrame.setResizable(false);
+                    internalFrame.pack();
+                    //ClientListFrame.this.dispose();
+               }
+            }
+         });
+        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);   
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(2);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(2);
+        
+        
+        
+        setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize()); 
+        pack();
+   }
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable(){
+
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                if (c instanceof JComponent) {
+                    if(column <= 10){
+                        //X is your particlur column number
+
+                        JComponent jc = (JComponent) c;
+                        String text = getValueAt(row, column).toString().trim();
+                        if(text.equalsIgnoreCase(""))
+                        text ="NA";
+                        jc.setToolTipText(text);
+                    }
+                }
+                return c;
+            }
+
+        };
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        client_Name = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        client_Mble = new javax.swing.JTextField();
+        jButtonEmpSearch = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+
+        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(253, 235, 235));
+        jLabel1.setText("   All Client List");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 861, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+
+        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+
+        jTable1.setForeground(new java.awt.Color(0, 0, 153));
+        empTableModel = new com.employeemanagement.models.CustomTableModel(data, header);
+        jTable1.setModel(empTableModel);
+        jTable1.setGridColor(new java.awt.Color(153, 153, 153));
+        jTable1.setRowHeight(20);
+        jTable1.setSelectionBackground(new java.awt.Color(153, 0, 0));
+        jScrollPane1.setViewportView(jTable1);
+
+        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+
+        jLabel3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel3.setText(" Client Name :");
+
+        ((AbstractDocument) client_Name.getDocument()).setDocumentFilter(new StringDocumentFilter());
+        client_Name.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                client_NameActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel4.setText("Mobile Number :");
+
+        ((AbstractDocument)client_Mble.getDocument()).setDocumentFilter(
+            new com.employeemanagement.utility.NumericDocumentFilter());
+
+        jButtonEmpSearch.setText("Search");
+        jButtonEmpSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEmpSearchActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(client_Name, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(client_Mble, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonEmpSearch)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(client_Name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(client_Mble, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonEmpSearch))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonEmpSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEmpSearchActionPerformed
+        reloadTableData();
+    }//GEN-LAST:event_jButtonEmpSearchActionPerformed
+
+    private void client_NameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_client_NameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_client_NameActionPerformed
+
+    
+    
+    public void reloadTableData()
+    {
+        List<String> params = new ArrayList<String>();
+        
+        params.add(client_Name.getText());
+        params.add(client_Mble.getText());
+        //List<Client> client = iPersistence.getClients();        
+        List<Client> client = iPersistence.getClients(params);
+        
+        data = new Vector<Vector<String>>();
+        
+        for(int i = 0; i < client.size(); i++ ){
+            vector = new Vector<String>();
+            
+            vector.add(client.get(i).getClient_id());
+            vector.add(client.get(i).getClient_name()); 
+            vector.add(client.get(i).getClient_mob1());           
+            vector.add(client.get(i).getClient_mob2());           
+            vector.add(client.get(i).getClient_add());
+                        
+            data.add(vector);
+            
+        }
+         
+        jTable1.setModel(new CustomTableModel(data, header)); 
+        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); 
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(2);
+        jTable1.getColumnModel().getColumn(2).setPreferredWidth(2);
+        empTableModel.fireTableDataChanged();
+        
+    }
+    
+    
+    
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField client_Mble;
+    private javax.swing.JTextField client_Name;
+    private javax.swing.JButton jButtonEmpSearch;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    // End of variables declaration//GEN-END:variables
+
+    MainFrame mainFrame;
+    
+    public static  void main(String args[]){
+        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ClientListFrame("test", null).setVisible(true);
+            }
+        });
+    
+    }
+    
+    
+    
+
+}
